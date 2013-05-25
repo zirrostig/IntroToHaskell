@@ -1,0 +1,700 @@
+%%%presentation%%%\documentclass{beamer}
+%%%handout%%%\documentclass[handout]{beamer}
+%%%notes%%%\documentclass[handout]{beamer}
+
+\usetheme{CambridgeUS}
+\usecolortheme{seagull}
+\usepackage[latin1,utf8]{inputenc}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage{pgfpages}
+\usepackage{amssymb,amsmath}
+\usepackage{minted} %using patched version included in dir, provides autogobble option
+\usemintedstyle{tango}
+
+%To disable double wide presentation for notes
+%%%withnotes%%%\setbeameroption{show notes on second screen}
+
+%To Generate Notes
+%%%notes%%%\setbeameroption{show only notes}
+%%%notes%%%\pgfpagesuselayout{2 on 1}[letterpaper, border shrink=1cm]
+
+%To Generate handouts
+%%%handout%%%\pgfpagesuselayout{2 on 1}[letterpaper,border shrink=1cm]
+
+%
+%Haskell code environment
+\newminted[hsframe]{haskell}{frame=single,linenos,autogobble,xleftmargin=1cm}
+\newmint[hsline]{haskell}{}
+\makeatletter
+\newenvironment<>{hscode}
+    {\VerbatimEnvironment
+     \minted@resetoptions
+     \setkeys{minted@opt}{frame=single,linenos,mathescape,autogobble,xleftmargin=1cm}
+     \begin{onlyenv}#1
+     \begin{VerbatimOut}{\jobname.pyg}}
+    {\end{VerbatimOut}
+     \minted@pygmentize{haskell}
+     \end{onlyenv}
+     \DeleteFile{\jobname.pyg}}
+\makeatother
+
+\title{Intro to Haskell}
+\author{Zachary Stigall}
+\date{\today}
+\institute[\the\year]{Colorado School of Mines}
+
+\begin{document}
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\section{Getting Started}
+\subsection{Install}
+\begin{frame}[t,fragile]
+	\frametitle{Install}
+    \begin{itemize}[<+->]
+		\item Linux:
+            \begin{itemize}
+                \item<.-> Debian/Ubuntu: \begin{verbatim}apt-get install haskell-platform\end{verbatim}
+
+                \item<.-> Fedora/CentOS/Redhat: \begin{verbatim}yum install haskell-platform\end{verbatim}
+                \item<.-> or use justhub
+
+                \item<.-> Arch: Install from the AUR
+                    \note[item]{Arch users are entirely capable of breaking their system on their own, and
+                        should know how to use the AUR}
+            \end{itemize}
+
+        \item Windows:
+            \begin{itemize}
+                \item<.-> Go to: \url{http://www.haskell.org/platform/windows.html} download,
+                    install
+            \end{itemize}
+
+        \item Mac:
+            \begin{itemize}
+                \item<.-> Option 1: Go to \url{http://www.haskell.org/platform/mac.html} download,
+                    install. Requires command line devel tools from XCode
+
+                \item<.-> Option 2: MacPorts, its in there somewhere
+
+                \item<.-> Option 3: HomeBrew, again its in there somewhere
+                    \note[item]{People who know about macports and homebrew should be good enough to get this
+                        it working}
+            \end{itemize}
+	\end{itemize}
+\end{frame}
+
+\subsection{Why the Haskell Platform}
+\begin{frame}[t,fragile]
+    \frametitle{Why the Haskell Platform}
+    \begin{itemize}[<+->]
+        \item Why not just ghc? %Making your life easier
+
+        \item What does the Haskell Platform provide?
+            \note[item]{The haskell platform provides a large set of libraries that work well together so you can
+                get started quicker and easier. Think of it like Python's 'Batteries', but for haskell}
+
+        \item Can I get away with just ghc?
+            \note[item]{Yes, but it will suck, just go to Alamode to find out how much it sucks to not have
+                basic libraries}
+    \end{itemize}
+\end{frame}
+
+\section{Basics}
+\subsection{About}
+\begin{frame}[t,fragile]
+    \frametitle{About Haskell}
+    \begin{itemize}[<+->]
+        \item Functional!\ldots Why?
+            \note[item]{Its different, fun, and not always practical, but it can easily solve problems that imperative
+                languages can't}
+
+        \item Pure! but has ways of handling impure stuff also.
+            \note[item]{No side-effects you don't have to worry about that Butterfly flipping a bit while
+            you're here: reference: http://xkcd.com/378/}
+            \note[item]{Purity also implies that everything will be immutable}
+
+        \item Strong and Static Typing that can also be Inferred
+            \note[item]{Think C/C++ but without nice implicit type casting
+                But you don't have to tell haskell you are using a String or Int or whatever if you
+                don't want to, ghc will figure this out}
+
+        \item First Class Functions
+            \note[item]{A function is no different than a value, you are encouraged (and need) to make
+            functions that take functions as parameters, and return functions themselves}
+
+        \item Lazy Evaluation
+            \note[item]{You won't directly deal with this, but haskell doesn't actually compute anything until
+            you ask for it.}
+
+        \item Tons and Tons of syntactic sugar
+            \note[item]{Learn to love operators and symbols, you will use them a lot}
+
+        \item Haskell is Compiled, but it has an interpreter also (GHCi)
+            \note[item]{GHCi is where everyone should start, learning haskell}
+    \end{itemize}
+\end{frame}
+
+\subsection{GHC}
+\begin{frame}[t,fragile]
+    \frametitle{GHC}
+    \begin{itemize}[<+->]
+        \item GHC is massive, so massive I gave it its own slide
+            \note[item]{Its like a 700MB executable}
+
+        \item It is smarter than you
+            \note[item]{Don't argue with it, you will lose}
+
+        \item It knows haskell way better than you, listen to its suggestions
+            \note[item]{It will actually give you suggestions on how to fix common problems or bad ideas}
+
+        \item If it actually compiles your code, your code 99\% of the time will not crash,
+            and will do exactly what you wanted
+            \note[item]{No Joke}
+
+        \item It is really, really good at what it does, Haskell is a High Performance language,
+            often programs compete with C++, Java, or C in terms of speed.
+    \end{itemize}
+\end{frame}
+
+\section{Coding Environment}
+\subsection{GHCI}
+\begin{frame}[t,fragile]
+    \frametitle{Getting Started in GHCI}
+    \begin{itemize}[<+->]
+        \item Run by typing ghci in a terminal
+        \item Try some basic math
+        \item By default Prelude is imported
+            \note[item]{Prelude is the most basic default functions that you will probably want and
+                need for any project, there are other Preludes also}
+        \item `it' can be used to reference the last returned value
+        \item Useful builtins
+            \begin{itemize}
+                \item \begin{verbatim}:t[ype] <something>\end{verbatim}
+                    \note[item]{Gives you the type definition of something}
+
+                \item \begin{verbatim}:l[oad] <hs file>\end{verbatim}
+                    \note[item]{Loads a haskell file into ghci so you can run and test code}
+
+                \item \begin{verbatim}:r[eload]\end{verbatim}
+                    \note[item]{Reloads last loaded file}
+
+                \item \begin{verbatim}:e[dit]\end{verbatim}
+                    \note[item]{Opens the last loaded file in your editor}
+
+                \item \begin{verbatim}:set editor <executable>\end{verbatim}
+                    \note[item]{Sets you editor to be whatever you tell it}
+
+                \item \begin{verbatim}:set prompt ``<prompt string>''\end{verbatim}
+                    \note[item]{Sets your prompt, by law it should be a $\lambda$ or some other haskell-ly
+                        thing}
+
+                \item \begin{verbatim}:main <args>\end{verbatim}
+                    \note[item]{Runs the main function of the loaded file, with args, simulating
+                        running it from your shell like normal}
+
+                \item \begin{verbatim}:h[elp]\end{verbatim}
+                    \note[item]{Displays GHCi help, telling you all about these commands and more}
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\subsection{File}
+\begin{frame}[t,fragile]
+    \frametitle{First File}
+    \begin{overprint}
+        \only<1|handout:1>{In your editor of choice create a new file, call it example.hs}
+
+        \only<1|handout:1>{A lot of the examples are inspired by Learn You a Haskell for Great Good}
+
+        \only<2-3|handout:1>{Functions basics}
+        \begin{itemize}
+            \item<2-3|handout:1> Name has to start with lowercase letter
+                \note[item]<2-|handout:1>{Uppercase names are reserved for Type Constructors}
+            \item<2-3|handout:1> Convention says to use camelCase, but underscores are fine too
+        \end{itemize}
+
+        \only<2|handout:1>{Create a function}
+        \begin{hscode}<2|handout:1>
+            twice x = 2 * x
+        \end{hscode}
+
+        \only<3|handout:1>{Add a type signature}
+        \begin{hscode}<3|handout:1>
+            twice :: Integer -> Integer
+            twice x = 2 * x
+
+            --Just to show a common idiom
+            twice' :: Integer -> Integer
+            twice' x = x + x
+        \end{hscode}
+            \note[item]<3-|handout:1->{Explain how the type signature works, we will get more into detail later\\}
+
+        \only<4|handout:2>{Using functions}
+        \begin{itemize}
+            \item<4|handout:2> Function application looks a lot like the definition
+        \end{itemize}
+        \begin{hscode}<4|handout:2>
+            twiceTwo :: Integer -> Integer -> Integer
+            twiceTwo x y = twice x + twice y
+        \end{hscode}
+            \note[item]<4-|handout:2>{Have them load their code into GHCi, and try out their functions\\}
+    \end{overprint}
+\end{frame}
+
+\section{The Basics}
+\subsection{Control}
+\begin{frame}[t,fragile]
+    \frametitle{Control Structures}
+    \begin{overprint}
+        \only<1|handout:1>{if..then..else}
+        \begin{itemize}
+            \item<1|handout:1> All if statements must have both a then clause \textit{AND} an else clause
+        \end{itemize}
+        \begin{hscode}<1|handout:1>
+            -- The 'even' function in Prelude does just this
+            -- Lets through a Type Class in here as well
+            isEven :: Integral a => a -> Bool
+            isEven x = if x `mod` 2 == 0
+                        then True
+                        else False
+        \end{hscode}
+            \note[item]<1-|handout:1->{Welcome to Type Classes, broad overview here}
+            \note[item]<1-|handout:1->{Integral is a Type of Real and Enum, and contains Int and Integer}
+            \note[item]<1-|handout:1->{Relate if to the ternary operator}
+            \note[itme]<1-|handout:1->{Make sure they understand this is an expression not a statement}
+
+        \only<2|handout:2>{case \textit{expr} of \ldots}
+        \begin{hscode}<2|handout:2>
+            isEven :: Integral a => a -> Bool
+            isEven x = case x `mod` 2 of
+                0 -> True
+                1 -> False
+        \end{hscode}
+
+        \only<3-7|handout:3>{Loops}
+        \begin{itemize}
+            \item<3-7|handout:3> You don't need them
+            \item<4-7|handout:3> You don't have them
+            \item<5-7|handout:3> You have to use some form of a map
+                \note[item]<5-|handout:3>{In 2 frames I cover maps, folds, filters, and list comps}
+                \note[item]<5-|handout:3>{Next frame is lists}
+            \item<6-7|handout:3> Or a List Comprehension
+            \item<7|handout:3> \ldots or use recursion
+        \end{itemize}
+    \end{overprint}
+\end{frame}
+
+\section{Lists}
+\subsection{Intro}
+\begin{frame}[t,fragile]
+    \frametitle{Lists}
+    \begin{overprint}
+        \only<1-|handout:1->{Lists are the bread and butter of functional programming\\}
+        \only<1-|handout:1->{You will use lists everywhere\\}
+        \only<2-|handout:1->{Lists are homogeneous, meaning you can't mix types like you would in Python, Ruby,
+            or other high level languages}
+        \begin{hscode}<3-|handout:1->
+            aList :: [Integer]
+            aList = [1,2,3,4]
+        \end{hscode}
+    \end{overprint}
+\end{frame}
+
+\subsection{Building}
+\begin{frame}[t,fragile]
+    \frametitle{Ranges and Construction}
+    \begin{overprint}
+        \only<1|handout:1>{The range operator \hsline{..}}
+        \begin{hscode}<1|handout:1>
+            -- .. is inclusive on both ends
+            >>= [1..4]
+            [1,2,3,4]
+            >>= [1..]
+            [1,2,3,...]
+            >>= [0,2..]
+            [0,2,4,...]
+            -- If you want to go backwards
+            >>= [9,8..0]
+            [9,8,7,6,5,4,3,2,1,0]
+        \end{hscode}
+
+        \only<2|handout:2>{List construction}
+        \begin{hscode}<2|handout:2>
+            -- : pronounced cons => prepends an item
+            >>= 'a' : ['b', 'c']
+            "abc"
+
+            -- ++ concatenate
+            >>= "hello" ++ " " ++ "world"
+            "hello world"
+        \end{hscode}
+            \note[item]<2|handout:2>{Strings are really just [Char]}
+    \end{overprint}
+\end{frame}
+
+\subsection{Grouping}
+\begin{frame}[t,fragile]
+    \frametitle{List Groups}
+    \begin{hscode}<1|handout:1>
+        -- head : tail
+        >>= head [10..20]
+        10
+        >>= tail [1..5]
+        [2,3,4,5]
+
+        -- init ++ [last]
+        >>= init [1..5]
+        [1,2,3,4]
+        >>= last [1..5]
+        5
+    \end{hscode}
+\end{frame}
+
+\subsection{Length}
+\begin{frame}[t,fragile]
+    \frametitle{List Info}
+    \begin{hscode}<1|handout:1>
+        -- null :: [a] -> Bool
+        >>= null []
+        True
+        >>= null ['a'..'f']
+        False
+
+        -- length :: [a] -> Int
+        >>= length []
+        0
+        >>= length ['0..'z']
+        75
+    \end{hscode}
+\end{frame}
+
+\subsection{Misc}
+\begin{frame}[t,fragile]
+    \frametitle{More Functions}
+    \begin{overprint}
+        \begin{hscode}<1|handout:1>
+            >>= reverse [1..4]
+            [4,3,2,1]
+
+            >>= take 5 [10,20..]
+            [10,20,30,40,50]
+
+            >>= drop 3 [2..9]
+            [5,6,7,8,9]
+        \end{hscode}
+
+        \begin{hscode}<2|handout:2>
+            >>= maximum [7,2,3,10,5,9]
+            10
+
+            >>= minimum [7,2,3,10,5,9]
+            2
+
+            >>= sum [7,2,3,10,5,9]
+            36
+
+            >>= product [7,2,3,10,5,9]
+            18900
+        \end{hscode}
+    \end{overprint}
+\end{frame}
+
+\begin{frame}[t,fragile]
+    \frametitle{Check and Access}
+    \begin{hscode}<1|handout:1>
+        >>= 'a' `elem` "hello world"
+        False
+
+        >>= elem 'w' "hello world"
+        True
+
+        >>= "hello world" !! 4
+        'o'
+
+        >>= head $ tail $ tail $ tail $ tail "hello world"
+        'o'
+    \end{hscode}
+\end{frame}
+
+\section{Iterations}
+\subsection{Map}
+\begin{frame}[t,fragile]
+    \frametitle{Map}
+    \begin{overprint}
+        \only<1-|handout:1->{Applies a function to each element in a list and returns the new list}
+        \begin{hscode}<1-|handout:1->
+            map :: (a -> b) -> [a] -> [b]
+        \end{hscode}
+        \begin{onlyenv}<2|handout:1>
+            \begin{minted}[frame=single,linenos,autogobble,xleftmargin=1cm]{python}
+                #A little python code
+                for i in lst:
+                    newval = func(i)
+                    newlst.append(newval)
+
+                #Or use python's map
+                newlst = map(func, lst)
+
+                #Or a list comp
+                newlst = [func(i) for i in lst]
+            \end{minted}
+        \end{onlyenv}
+
+        \begin{hscode}<3|handout:2>
+            -- Multiplies each item in a list by 2
+            timesTwo lst = map (\x -> 2 * x) lst
+        \end{hscode}
+
+        \begin{hscode}<4|handout:3>
+            -- Lets Clean up our function def a little
+            -- First lets get rid of the lambda
+
+            timesTwo lst = map (* 2) lst
+        \end{hscode}
+
+        \begin{hscode}<5-6|handout:4>
+            -- Lets Clean up our function def a little
+            -- First lets get rid of the lambda
+            -- Second lets get rid of excess 'points'
+            timesTwo = map (* 2)
+        \end{hscode}
+
+        \begin{hscode}<6|handout:4>
+            -- How about a list comp
+            timesTwo xs = [ 2 * x | x <- xs ]
+        \end{hscode}
+
+    \end{overprint}
+\end{frame}
+
+\subsection{Filter}
+\begin{frame}[t,fragile]
+    \frametitle{Filter}
+    \begin{overprint}
+        \only<1-|handout:1->{Checks each item against some condition. True $\Rightarrow$ keep, False $\Rightarrow$ Discard}
+        \begin{hscode}<1-|handout:1->
+            filter :: (a -> Bool) -> [a] -> [a]
+        \end{hscode}
+
+        \begin{onlyenv}<2|handout:1>
+            \begin{minted}[frame=single,linenos,autogobble,xleftmargin=1cm]{python}
+                #More python
+                for i in lst:
+                    if func(i):
+                        newlst.append(i)
+
+                #Or python's filter
+                newlst = filter(func, lst)
+
+                #Or a list comp
+                newlst = [i for i in lst if func(i)]
+            \end{minted}
+        \end{onlyenv}
+
+        \begin{hscode}<3-5|handout:2>
+            -- Looks a lot like map
+            evens xs = filter even xs
+        \end{hscode}
+
+        \begin{hscode}<4-5|handout:2>
+            -- Cleaned up a bit
+            evens = filter even
+        \end{hscode}
+
+        \begin{hscode}<5|handout:2>
+            -- As a list comp
+            evens xs = [ x | x <- xs, even x ]
+        \end{hscode}
+
+    \end{overprint}
+\end{frame}
+
+\subsection{Folds}
+\begin{frame}[t,fragile]
+    \frametitle{Folds}
+    \begin{overprint}
+        \only<1-|handout:1->{Applies a function to each item of a list and an accumulator, returns the
+            accumulator}
+        \begin{hscode}<1-|handout:1->
+            foldl :: (a -> b -> a) -> a -> [b] -> a
+            foldr :: (a -> b -> b) -> b -> [a] -> b
+        \end{hscode}
+
+        \begin{onlyenv}<2|handout:1>
+            \begin{minted}[frame=single,linenos,autogobble,xleftmargin=1cm]{python}
+                #Python once more
+                for i in lst:
+                    accum = func(accum, i)
+
+                #Clear as mud right?
+                #Python also has a fold it is called reduce
+                from functools import reduce
+                reduce(func, lst)
+            \end{minted}
+        \end{onlyenv}
+
+        \begin{hscode}<3|handout:2>
+            -- Lets make a difference function
+            -- Continually subtracts each number
+            diffl x:xs = foldl (-) x xs
+            -- Or foldr
+            diffr xs = foldr (-) (last xs) (init xs)
+        \end{hscode}
+        \begin{hscode}<4|handout:3>
+            -- These don't behave the same
+            >>= diffl [1..10]
+            -53
+
+            >>= diffr [1..10]
+            -5
+        \end{hscode}
+    \end{overprint}
+\end{frame}
+
+\section{The Type System}
+\subsection{So Far}
+\begin{frame}[t,fragile]
+    \frametitle{Types}
+    \begin{overprint}
+        \only<1-|handout:1>{Haskell is strongly typed}
+        \only<2-|handout:1>{\dots And it doesn't really like type casting (you can still do it though)}
+        \only<3-|handout:1>{So far\dots}
+        \begin{itemize}
+            \item<4-|handout:1> Type Signatures
+            \item<5-|handout:1> A couple of common types
+        \end{itemize}
+    \end{overprint}
+\end{frame}
+
+\subsection{Type Signatures}
+\begin{frame}
+    \frametitle{Type Signatures}
+    \begin{overprint}
+        \only<1-3|handout:1>{Your understanding so far\dots}
+        \begin{hscode}<2-3|handout:1>
+            funcName :: ArgT1 -> ArgT2 -> ArgT3 -> ReturnT
+            -- More appropriately
+            funcName :: a -> b -> c -> d
+        \end{hscode}
+        \only<3-|handout:1-2>{You are limiting yourself, and preventing Haskell from doing what it's
+            good at, Currying}
+        \only<4-7|handout:2>{There is a reason we use arrows for all args and return}
+        \only<5-7|handout:2>{The return is not necessarily the last item}
+        \begin{hscode}<6|handout:2>
+            func1 :: Int a => a -> a -> a -> a
+            func2 :: Int a => a -> a -> a
+            func3 :: Int a => a -> a
+            func4 :: Int a => a
+        \end{hscode}
+
+        \begin{hscode}<7-|handout:2>
+            func1 :: Int a => a -> a -> a -> a
+            func2 :: Int a => a -> a -> a
+            func3 :: Int a => a -> a
+            func4 :: Int a => a
+
+            --Lets define these a bit
+            func1 a b c = a + b + c
+            func2 a b = func1 10 a b
+            func3 a = func2 20 a
+            func4 = func3 30
+        \end{hscode}
+
+        \only<8-|handout:3>{Another way to look at it}
+        \only<9-|handout:3>{Given something, returns what is left}
+            \note<9->{well actually it is what is on the right}
+        \only<10-|handout:3>{So given a function that takes at most 3 values}
+        \begin{hscode}<10-|handout:3>
+            func1 :: a -> b -> c -> d
+        \end{hscode}
+
+        \only<11-|handout:3>{Give it one value, and you get back a new function}
+        \begin{hscode}<11-|handout:3>
+            func2 :: b -> c -> d
+            func2 a = func1 a
+        \end{hscode}
+            \note<11->{Now is a really good time to talk about lambda calculus}
+            \note<11->{Lambda calculus' functions always take 1 value, but can return functions}
+            \note<11->{Make them ask questions, make sure they understand}
+    \end{overprint}
+\end{frame}
+
+%This section needs work
+\section{IO and Monads}
+\subsection{FirstExe}
+\begin{frame}[t,fragile]
+    \frametitle{Creating your first executable}
+    \begin{overprint}
+        \begin{hscode}<1-2|handout:1>
+            main = do
+              putStr "What is your name? "
+              user <- getLine
+              putStr "Hi "
+              putStrLn user
+        \end{hscode}
+
+        \begin{onlyenv}<2|handout:1>
+            To Run: \\
+            \begin{verbatim}runhaskell <yourfile>\end{verbatim}}
+            Or: \\
+            \begin{verbatim}ghc <yourfile> -o <exename>; ./<exename>\end{verbatim}
+        \end{onlyenv}
+
+        \begin{hscode}<3|handout:2>
+            -- Alternate way if you prefer 
+            --   braces and semicolons
+            main = do {
+              putStr "What is your name? ";
+                user <- getLine;
+                  putStr "Hi ";
+                    putStrLn user;
+            }
+            -- The excess indetation is to show
+            --   that with this notation haskell
+            --   ignores whitespace
+        \end{hscode}
+
+        \begin{hscode}<4|handout:3>
+            -- Alternate way using Monad operators
+            -- Note: This is technically one line
+            --   you are allowed to play with whitespace some
+            main = putStr "What is your name? " >>
+                   getLine >>=
+                   putStrLn . (++) "Hi "
+        \end{hscode}
+    \end{overprint}
+\end{frame}
+
+\begin{frame}[t,fragile]
+    \frametitle{Your first Monad}
+    \begin{overprint}
+        \only<1-2|handout:1>{You just did it, congrats\\}
+        \only<2-|handout:1>{We are not creating monads today, that is beyond the scope of this presentation\\}
+        \only<3-|handout:1>{Monads you will use as a haskell programmer, and not realize\\}
+        \begin{itemize}
+            \item<4-> IO
+            \item<5-> Maybe
+            \item<6-> Either
+            \item<7-> List
+            \item<8-> Many More
+        \end{itemize}
+
+    \end{overprint}
+\end{frame}
+
+
+\section{Closing}
+\begin{frame}[t,fragile]
+    \frametitle{Questions and Resources}
+    \begin{itemize}
+        \item<1-|handout:1-> Book/Web: \href{http://learnyouahaskell.com/}{Learn You a Haskell For Great Good}
+        \item<1-|handout:1-> Book/Web: \href{http://book.realworldhaskell.org/}{Real World Haskell}
+        \item<1-|handout:1-> Web:      \href{https://www.fpcomplete.com/}{School of Haskell}
+    \end{itemize}
+
+    \only<2>{\huge{Questions?}}
+\end{frame}
+\end{document}
