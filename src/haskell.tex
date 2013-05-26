@@ -579,44 +579,28 @@
         \end{hscode}
         \only<3-|handout:1-2>{You are limiting yourself, and preventing Haskell from doing what it's
             good at, Currying}
-        \only<4-7|handout:2>{There is a reason we use arrows for all args and return}
+            \only<4-7|handout:2>{There is a reason we use arrows (->) for all args and return}
         \only<5-7|handout:2>{The return is not necessarily the last item}
         \begin{hscode}<6|handout:2>
-            func1 :: Int a => a -> a -> a -> a
-            func2 :: Int a => a -> a -> a
-            func3 :: Int a => a -> a
-            func4 :: Int a => a
+            afunc :: Int a => a -> a -> a
         \end{hscode}
 
-        \begin{hscode}<7-|handout:2>
-            func1 :: Int a => a -> a -> a -> a
-            func2 :: Int a => a -> a -> a
-            func3 :: Int a => a -> a
-            func4 :: Int a => a
-
-            --Lets define these a bit
-            func1 a b c = a + b + c
-            func2 a b = func1 10 a b
-            func3 a = func2 20 a
-            func4 = func3 30
+        \only<7-|handout:3>{Another way to look at it}
+        \only<8-|handout:3>{Given something, returns what is left}
+            \note<8->{well actually it is what is on the right}
+        \only<9-|handout:3>{So given a function that takes at most 3 values}
+        \begin{hscode}<9-|handout:3>
+            afunc :: a -> b -> c -> d
         \end{hscode}
 
-        \only<8-|handout:3>{Another way to look at it}
-        \only<9-|handout:3>{Given something, returns what is left}
-            \note<9->{well actually it is what is on the right}
-        \only<10-|handout:3>{So given a function that takes at most 3 values}
+        \only<10-|handout:3>{Give it one value, and you get back a new function}
         \begin{hscode}<10-|handout:3>
-            func1 :: a -> b -> c -> d
-        \end{hscode}
-
-        \only<11-|handout:3>{Give it one value, and you get back a new function}
-        \begin{hscode}<11-|handout:3>
             func2 :: b -> c -> d
             func2 a = func1 a
         \end{hscode}
-            \note<11->{Now is a really good time to talk about lambda calculus}
-            \note<11->{Lambda calculus' functions always take 1 value, but can return functions}
-            \note<11->{Make them ask questions, make sure they understand}
+            \note<10->{Now is a really good time to talk about lambda calculus}
+            \note<10->{Lambda calculus' functions always take 1 value, but can return functions}
+            \note<10->{Make them ask questions, make sure they understand}
     \end{overprint}
 \end{frame}
 

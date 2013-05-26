@@ -6,6 +6,10 @@ smaller segments.
 
 For LaTeX'ers and people running the Makefile
 ---------------------------------------------
+Required LaTeX packages:
+ - Beamer
+ - Minted (Which requires the standalone application pygments)
+
 Makefile Info:
  - 'make presentation.pdf' will create the default presentation
  - adding notes=true to the make command will cause the Makefile to generate the
@@ -29,4 +33,5 @@ Makefile Info:
    %%%withnotes%%%
  - If the above is too confusing just look at haskell.tex and you should see
    what I mean
- - GL,HF
+
+GL,HF
