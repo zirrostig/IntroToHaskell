@@ -15,6 +15,8 @@ Makefile Info:
    incremental bullet points
  - 'make notes.pdf' will create the accompanying notes to go with each
    slide/bulletpoint
+ - 'make all' will create the 3 pdf's above without notes in the presentation
+ - 'make install' will install to PREFIX, or the directory above src/ by default.
 
  - When modifing src/haskell.tex, anything that you want explicitly in a
    particular make should be preceded by '%%%pdfname%%%'
