@@ -8,9 +8,12 @@ all: clean $(SOURCE) $(PDFS)
 install: $(PDFS)
 	cp -t $(PREFIX) $(PDFS)
 
+haskell.pdf: $(SOURCE)
+	
+
 %.pdf: $(SOURCE)
 ifdef notes
-	sed 's@%%%withnotes%%%@@' <$ $(@:.pdf=.tex)
+	sed 's@%%%withnotes%%%@@' $< >$(@:.pdf=.tex)
 else
 	cp $< $(@:.pdf=.tex)
 endif
